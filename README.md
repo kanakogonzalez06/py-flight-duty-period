@@ -67,3 +67,10 @@ PYTHONPATH=src python -m unittest discover -s tests
 - Split duty, in-flight rest, augmented crew — these require crew-rest context that the caller must curate. `calculate` raises rather than guessing.
 - Timezone conversion — the caller owns the clock.
 - Parsing partial or malformed durations — `parse_duration` raises on anything not matching `^\d{2}:\d{2}$` with minutes in `[0, 59]`.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
